@@ -141,7 +141,7 @@ textarea.form-control {
 }
 
 .btn-danger {
-    background-color: #dc3545;
+    background-color: #dc3545; 
     color: white;
 }
 
@@ -211,6 +211,8 @@ textarea.form-control {
     font-weight: 600;
     color: #333;
 }
+
+
 
 /* 編集フォーム */
 .edit-form {
@@ -506,4 +508,9 @@ textarea.form-control {
 
 .logged-out {
     display: none;
+}
+
+#nicknameContainer {
+    font-weight:200;
+    color: #495057;
 }

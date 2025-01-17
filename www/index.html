@@ -99,6 +99,9 @@ function validateAuthInput(email, password, isRegister = false) {
 
 // 投稿処理
 function createPost(author, content) {
+
+
+
     if (!currentUser) {
         showMessage('投稿するにはログインが必要です', 'error');
         return;
@@ -131,6 +134,7 @@ function createPost(author, content) {
         });
 }
 
+
 // HTMLエスケープ処理
 function escapeHtml(str) {
     if (!str) return '';
@@ -162,6 +166,11 @@ function canEditPost(post) {
 // 投稿のHTML要素を生成
 // 　バグ入りなので要修正（編集・削除機能表示判定が誤っている）
 function createPostElement(post) {
+
+    //投稿表示時にニックネームを表示
+    const { content, nickname, createdAt } = post;
+    const displayName = nickname || '匿名';
+
     // 編集権限を確認
     const canEdit = canEditPost(post);
     // 編集権限があれば、編集・削除機能を表示
@@ -179,7 +188,7 @@ function createPostElement(post) {
     return `
         <div class="post" id="post-${post.id}">
             <div class="post-header">
-                <span class="post-author">${escapeHtml(post.author)}</span>
+                <span class="post-author">${escapeHtml(displayName)}</span>
                 <!-- 編集権限があれば、編集・削除機能を表示 -->
                 ${actions}
             </div>
@@ -208,6 +217,7 @@ function createPostElement(post) {
         </div>
     `;
 }
+
 
 // 投稿の表示処理
 function renderPosts(posts) {
@@ -405,6 +415,7 @@ function login(email, password) {
         });
 }
 
+
 // 新規登録処理
 function register(email, password) {
     if (!validateAuthInput(email, password, true)) return;
@@ -468,6 +479,7 @@ $(function() {
     }
 
     // 認証状態の監視
+    
     firebase.auth().onAuthStateChanged((user) => {
         currentUser = user;
         updateUI(user);
@@ -513,6 +525,9 @@ window.addEventListener('unload', function() {
         postsListener = null;
     }
 });
+
+
+
     </script>
 </head>
 <body>
@@ -535,6 +550,9 @@ window.addEventListener('unload', function() {
                        class="form-control" placeholder="6文字以上">
                 <small class="help-text">※新規登録時は6文字以上</small>
             </div>
+
+    
+
             <div class="button-group">
                 <button id="loginButton" class="btn-primary">ログイン</button>
                 <button id="registerButton" class="btn-secondary">新規登録</button>
@@ -558,6 +576,17 @@ window.addEventListener('unload', function() {
             <div class="button-group">
                 <button id="postButton" class="btn-primary">投稿する</button>
             </div>
+        </div>
+
+        <!-- ニックネーム -->
+        <div id="nicknameContainer" class="nickname-form">
+            <h3>ニックネームを登録してください</h3>
+            <div class="form-group">
+                <label for="nickname">ニックネーム:</label>
+                <input type="text" id="nickname" class="form-control" placeholder="ニックネームを入力">
+                <small class="help-text">一度登録すると変更できません。</small>
+            </div>
+            <button id="saveNicknameBtn" class="btn-primary">保存</button>
         </div>
 
         <!-- 投稿一覧 -->
